@@ -73,3 +73,7 @@ experimento :: [Animal] -> Int
 experimento ratones  = cantidadIdeal (estanMejoresQueNunca ratones.reduceFatFast)
 
 
+
+
+
+
