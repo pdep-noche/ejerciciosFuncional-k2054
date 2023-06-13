@@ -121,19 +121,24 @@ ghci> gobernarUnAño gobiernoA springfield
 [UnCiudadano {profesion = "SeguridadNuclear", sueldo = 12000.0, cantidadDeHijos = 3.0, bienes = [("casa",50000.0),("deuda",-70000.0)]},UnCiudadano {profesion = "Empresario", sueldo = 286600.0, cantidadDeHijos = 1.0, bienes = [("empresa",1000000.0),("empresa",500000.0),("auto",200000.0)]},UnCiudadano {profesion = "Profesor", sueldo = 12000.0, cantidadDeHijos = 1.0, bienes = []},UnCiudadano {profesion = "Profesor", sueldo = 12000.0, cantidadDeHijos = 0.0, bienes = [("casa",35000.0)]}]
 -}
 
-
 gobernarPeriodoCompleto :: Gobierno -> Ciudad -> Ciudad
-gobernarPeriodoCompleto gobierno ciudad = foldl (\unaCiudad _ -> gobernarUnAño gobierno unaCiudad)  ciudad (años gobierno)
+gobernarPeriodoCompleto unGobierno unaCiudad = foldl (flip ($)) unaCiudad (replicate ((length.años) unGobierno) (gobernarUnAño unGobierno))
 
-{-
-ghci> gobernarPeriodoCompleto gobiernoA springfield
-[UnCiudadano {profesion = "SeguridadNuclear", sueldo = 21000.0, cantidadDeHijos = 3.0, bienes = [("casa",50000.0),("deuda",-70000.0)]},UnCiudadano {profesion = "Empresario", sueldo = 235626.9, cantidadDeHijos = 1.0, bienes = [("empresa",1000000.0),("empresa",500000.0),("auto",200000.0)]},UnCiudadano {profesion = "Profesor", sueldo = 12000.0, cantidadDeHijos = 1.0, bienes = []},UnCiudadano {profesion = "Profesor", sueldo = 12000.0, cantidadDeHijos = 0.0, bienes = [("casa",35000.0)]}]
--}
+
+gobernarPeriodoCompleto2 :: Gobierno -> Ciudad -> Ciudad
+gobernarPeriodoCompleto2 unGobierno unaCiudad = foldl (\ciudad _ -> gobernarUnAño unGobierno ciudad) unaCiudad (años unGobierno)
+
 
 distribuyoRiqueza :: Gobierno -> Ciudad -> Bool
-distribuyoRiqueza gobierno ciudad =  diferenciaDePatrimonio ciudad > (diferenciaDePatrimonio.gobernarPeriodoCompleto gobierno) ciudad
+distribuyoRiqueza unGobierno unaCiudad = diferenciaDePatrimonio unaCiudad > (diferenciaDePatrimonio.gobernarPeriodoCompleto unGobierno) unaCiudad
 
-{-
-ghci> distribuyoRiqueza gobiernoA springfield      
-True
--}
+kane :: Ciudadano
+kane = UnCiudadano "Empresario"  1000000 0 [("Rosebud", valor)| valor <- [5,10..]]
+
+f1:: (Num a) =>  a  -> ( b ->  a -> Bool)   -> b    ->  [a] -> [a]
+f1 x y z = map (*x) . filter (y z) 
+
+
+
+
+
